@@ -1,0 +1,100 @@
+services:
+  #Сервис фронтенда
+  front:
+  #берем не образ а готовый файл на пк
+    build: ./frontend
+    #даем имя
+    container_name: frontend
+    #пишем внутренние и внешние порты
+    ports:
+      - "8080:80"
+    #пишем порядок перезапуска
+    restart: always
+    #пишем зависимость от какого-либо контейнера
+    depends_on:
+      - back
+
+  back:
+    #берем не образ а готовый файл на пк
+    build: ./backend
+    #даем имя
+    container_name: backend
+    #пишем внутренние и внешние порты
+    ports:
+      - "4000:4000"
+    #Пишем зависимости
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    #пишем порядок перезапуска 
+    restart: always
+    #пишем зависимость от какого-либо контейнера
+    depends_on:
+      bd:
+        condition: service_healthy
+
+  bd:
+  #берем готовый образ
+    image: docker.io/postgres:16-alpine
+     #даем имя
+    container_name: database
+    #Пишем зависимости
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      #пишем порядок перезапуска 
+    restart: always
+    #пишем проверку работоспособности
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_PASSWORD}"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    #пишем нахождение данных на локальном устройстве
+    volumes:
+      - posgres_data:/var/lib/postgresql/data
+
+  redis:
+  #берем готовый образ
+    image: docker.io/redis:7-alpine
+    #даем имя
+    container_name: rediska
+    #пишем порядок перезапуска     
+    restart: always
+    #пишем нахождение данных на локальном устройстве
+    volumes:
+      - rediska:/data
+
+  pgadmin:
+  #берем готовый образ
+    image: docker.io/dpage/pgadmin4:latest
+    #даем имя
+    container_name: pgadminka
+    ports:
+      - "5678:80"
+    environment:
+       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    #пишем порядок перезапуска 
+    restart: always
+    #пишем зависимость от какого-либо контейнера
+    depends_on:
+      bd:
+        condition: service_healthy
+    #пишем нахождение данных на локальном устройстве
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    
+
+#указываем docker  на создание томов
+volumes:
+  posgres_data:
+  pgadmin:
+  rediska:

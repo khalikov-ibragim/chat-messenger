@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Chat</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main id="login-screen" class="screen">
+    <div class="card">
+      <h1>simple_chat</h1>
+      <p class="hint">Учебный проект — практика Docker Compose</p>
+      <input id="username-input" placeholder="Ваше имя" autocomplete="off" />
+      <button id="join-btn">Войти в общий чат</button>
+      <p id="status" class="status">соединение...</p>
+    </div>
+  </main>
+
+  <main id="chat-screen" class="screen hidden">
+    <header class="chat-header">
+      <span>#general</span>
+      <span id="whoami"></span>
+    </header>
+    <div id="messages"></div>
+    <form id="message-form" class="input-area">
+      <input id="message-input" placeholder="Написать сообщение" autocomplete="off" />
+      <button type="submit">Отправить</button>
+    </form>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+:root {
+  --bg: #11151c;
+  --panel: #1a2029;
+  --accent: #4f8cff;
+  --text: #e6e9ef;
+  --muted: #7b8494;
+  --bubble: #232b38;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.hidden { display: none !important; }
+
+.screen { width: 100%; max-width: 480px; padding: 16px; }
+
+.card {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.card h1 {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.6rem;
+  margin: 0 0 4px;
+  color: var(--accent);
+}
+
+.hint { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #2c3644;
+  background: #0f141c;
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+button {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #0b0e13;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover { opacity: 0.9; }
+
+.status { color: var(--muted); font-size: 0.75rem; margin-top: 16px; margin-bottom: 0; }
+
+#chat-screen {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  max-width: 560px;
+  background: var(--panel);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #2c3644;
+  display: flex;
+  justify-content: space-between;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  color: var(--muted);
+}
+
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  background: var(--bubble);
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 0.95rem;
+}
+
+.message .who {
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.input-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #2c3644;
+}
+
+.input-area input { margin: 0; flex: 1; }
+.input-area button { width: auto; padding: 12px 18px; }
