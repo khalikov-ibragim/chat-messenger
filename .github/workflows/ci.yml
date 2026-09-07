@@ -13,7 +13,7 @@ jobs:
         run: docker compose build
        # Start containers
       - name: start containers
-        run: docker compose ud -d
+        run: docker compose up -d
       # check work containers
       - name: check the containers
         run: docker compose ps -a
