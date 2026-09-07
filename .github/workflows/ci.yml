@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches: [main]
+jobs:
+  onestage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy my repository
+        uses: actions/checkout@v4
+        #Build my containers
+      - name: Build containers
+        run: docker compose build
+       # Start containers
+      - name: start containers
+        run: docker compose ud -d
+      # check work containers
+      - name: check the containers
+        run: docker compose ps -a
+
+      - name: wait for backend
+        run: |
+          for i in $(seq 1 30); do
+          if curl -f http://localhost:8000/health; then
+          echo "backend ready"
+            exit 0
+          fi
+          echo "waiting... attempt $i"
+          sleep 2
+          done
+          echo "backend did not start in time"
+          exit 1
