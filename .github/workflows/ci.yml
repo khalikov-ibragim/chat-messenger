@@ -57,7 +57,7 @@ jobs:
       #deploy
   deploy:
     runs-on: self-hosted
-    needs: [test]
+    needs: [onestage]
     steps:
       - name: Run my repository
         uses: actions/checkout@v4
