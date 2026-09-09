@@ -37,3 +37,19 @@ jobs:
         with:
           name: test-results
           path: test-report.txt
+
+      #Логинимся в Docker Hub для переноса наших проектов туда
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{  secrets.DOCKER_PASSWORD }}
+
+      - name: build and push backend
+        run: |
+          docker tag chat-messenger-back glimpl/chat-messenger-back:latest
+          docker push glimpl/chat-messenger-back:latest
+      - name: build and push frontend
+        run: |
+          docker tag chat-messenger-front glimpl/chat-messenger-front:latest
+          docker push glimpl/chat-messenger-front:latest
