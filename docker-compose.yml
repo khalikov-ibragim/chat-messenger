@@ -7,7 +7,7 @@ services:
     container_name: frontend
     #пишем внутренние и внешние порты
     ports:
-      - "8080:80"
+      - "7890:80"
     #пишем порядок перезапуска
     restart: always
     #пишем зависимость от какого-либо контейнера
@@ -65,7 +65,7 @@ services:
   #берем готовый образ
     image: docker.io/redis:7-alpine
     #даем имя
-    container_name: rediska
+    container_name: redis
     #пишем порядок перезапуска     
     restart: always
     #пишем нахождение данных на локальном устройстве
@@ -78,7 +78,7 @@ services:
     #даем имя
     container_name: pgadminka
     ports:
-      - "5678:80"
+      - "5679:80"
     environment:
        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

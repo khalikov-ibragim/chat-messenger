@@ -20,9 +20,13 @@ const messageInput = document.getElementById('message-input');
 socket.on('connect', () => { statusEl.textContent = 'подключено к серверу'; });
 socket.on('connect_error', (err) => { statusEl.textContent = 'нет соединения с backend: ' + err.message; });
 
-joinBtn.addEventListener('click', async () => {
+joinBtn.addEventListener('click', () => {
   const name = usernameInput.value.trim();
   if (!name) return;
+  socket.emit('register_user', { username: name });
+});
+
+socket.on('register_ok', async ({ username: name }) => {
   username = name;
   whoamiEl.textContent = username;
   loginScreen.classList.add('hidden');
@@ -30,6 +34,10 @@ joinBtn.addEventListener('click', async () => {
   socket.emit('join_room', ROOM);
   await loadHistory();
   messageInput.focus();
+});
+
+socket.on('username_taken', ({ username: name }) => {
+  alert(`Имя «${name}» уже занято. Выбери другое.`);
 });
 
 usernameInput.addEventListener('keypress', (e) => {

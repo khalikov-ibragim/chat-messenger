@@ -37,10 +37,13 @@ async function initDb() {
 }
 
 // --- Redis adapter (lets socket.io scale across multiple backend replicas) ---
+let pubClient;
+let subClient;
+
 async function setupRedisAdapter() {
   const url = `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`;
-  const pubClient = createClient({ url });
-  const subClient = pubClient.duplicate();
+  pubClient = createClient({ url });
+  subClient = pubClient.duplicate();
   pubClient.on('error', (err) => console.error('[redis pub]', err));
   subClient.on('error', (err) => console.error('[redis sub]', err));
   await Promise.all([pubClient.connect(), subClient.connect()]);
@@ -66,8 +69,25 @@ app.get('/api/messages/:room', async (req, res) => {
 });
 
 // --- Socket.io events ---
+const nickKeys = new Map();
+
 io.on('connection', (socket) => {
   console.log('[socket] connected', socket.id);
+
+  socket.on('register_user', async ({ username } = {}) => {
+    const name = (username || '').trim();
+    if (!name) return;
+
+    const key = `nick:${name}`;
+    const acquired = await pubClient.set(key, socket.id, { NX: true });
+
+    if (acquired === 'OK') {
+      nickKeys.set(socket.id, key);
+      socket.emit('register_ok', { username: name });
+    } else {
+      socket.emit('username_taken', { username: name });
+    }
+  });
 
   socket.on('join_room', (room) => {
     socket.join(room);
@@ -86,7 +106,15 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
+    const key = nickKeys.get(socket.id);
+    if (key) {
+      const owner = await pubClient.get(key);
+      if (owner === socket.id) {
+        await pubClient.del(key);
+      }
+      nickKeys.delete(socket.id);
+    }
     console.log('[socket] disconnected', socket.id);
   });
 });
