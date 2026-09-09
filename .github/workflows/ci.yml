@@ -56,7 +56,7 @@ jobs:
 
       #deploy
   deploy:
-    runs-on: self-hosted
+      runs-on: self-hosted
       needs: [test]
       steps:
         - name: Run my repository
