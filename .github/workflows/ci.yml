@@ -32,7 +32,7 @@ jobs:
           exit 1
 
       - name: test chat
-        run: docker compose exec -T back node test_chat.js # выполни команду внутри контейнера,back - имя сервиса, node - программа которую запустим, test_chat.js - аргумент программы
+        run: docker compose exec -T back node test_chat.js | tee test-report.txt # выполни команду внутри контейнера,back - имя сервиса, node - программа которую запустим, test_chat.js - аргумент программы
       - uses: actions/upload-artifact@v4 #Сохраняем ответ
         with:
           name: test-results
