@@ -14,11 +14,11 @@
 
 | Сервис   | Порт снаружи | Зависит от | Том   |
 |----------|--------------|------------|-------|
-| frontend | `8080`       | backend    | —     |
+| frontend | `7890`       | backend    | —     |
 | backend  | `4000`       | Postgres (healthy) | — |
 | Postgres | —            | —          | `posgres_data` |
 | Redis    | —            | —          | `rediska` |
-| pgAdmin  | `5678`       | Postgres   | `pgadmin` |
+| pgAdmin  | `5679`       | Postgres   | `pgadmin` |
 
 ## Быстрый старт
 
@@ -29,9 +29,9 @@ podman-compose up -d     # или docker-compose up -d
 
 Затем:
 
-- **Чат:** http://localhost:8080
+- **Чат:** http://localhost:7890
 - **Backend API и WebSocket:** http://localhost:4000 (health — `GET /health`)
-- **pgAdmin:** http://localhost:5678
+- **pgAdmin:** http://localhost:5679
 
 ## Как работает
 
@@ -42,11 +42,8 @@ podman-compose up -d     # или docker-compose up -d
 
 ## Известные ловушки / TODO
 
-1. **Healthcheck Postgres** (`docker-compose.yml`) сейчас проверяет:
-   ```yaml
-   test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_PASSWORD}"]
-   ```
-   Здесь `-d` ждёт имя БД, а подставлен пароль. Правильнее `-d ${POSTGRES_DB}`.
+1. **Healthcheck Postgres** (`docker-compose.yml`) исправлен на `-d ${POSTGRES_DB}` —
+   ранее использовался `-d ${POSTGRES_PASSWORD}`, что невалидно (`-d` ждёт имя БД).
 
 2. **Redis без healthcheck**: backend пока не зависит от готовности Redis по
    `condition: service_healthy` — при scale-запуске добавь healthcheck и зависимость.
