@@ -1,4 +1,4 @@
-FROM docker.io/library/nginx:latest
+FROM docker.io/library/nginx:1.27.5
 
 WORKDIR /usr/share/nginx/html
 
