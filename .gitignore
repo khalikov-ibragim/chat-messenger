@@ -3,3 +3,6 @@
 .env
 *.tfstate
 .terraform/
+
+# локальные зависимости (не в репо)
+node_modules/
