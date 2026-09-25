@@ -30,7 +30,9 @@ jobs:
     steps:
       - name: Copy my repository
         uses: actions/checkout@v4
-        #Build my containers
+      - name: copy .env
+        run: cp .env.example .env
+      #Build my containers
       - name: Build containers
         run: docker compose build
        # Start containers
