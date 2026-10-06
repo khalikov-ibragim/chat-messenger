@@ -5,7 +5,6 @@ services:
     # берем не образ а готовый файл на пк
     build: ./frontend
     # даем имя
-    container_name: frontend
     # пишем внутренние и внешние порты
     ports:
       - 7890:80
@@ -16,8 +15,6 @@ services:
   back:
     # берем не образ а готовый файл на пк
     build: ./backend
-    # даем имя
-    container_name: backend
     # пишем внутренние и внешние порты
     ports:
       - 4000:4000
@@ -39,8 +36,7 @@ services:
   bd:
     # берем готовый образ
     image: docker.io/postgres:16-alpine
-    # даем имя
-    container_name: database
+
     # Пишем зависимости
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -60,8 +56,7 @@ services:
   redis:
     # берем готовый образ
     image: docker.io/redis:7-alpine
-    # даем имя
-    container_name: redis
+
     # пишем порядок перезапуска
     restart: always
     # пишем нахождение данных на локальном устройстве
@@ -69,9 +64,9 @@ services:
   pgadmin:
     # берем готовый образ
     image: docker.io/dpage/pgadmin4:latest
-    # даем имя
-    container_name: pgadminka
-    ports: [5679:80]
+
+    ports:
+      - 5679:80
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

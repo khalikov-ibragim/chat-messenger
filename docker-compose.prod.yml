@@ -61,9 +61,8 @@ services:
   pgadmin:
     # берем готовый образ
     image: docker.io/dpage/pgadmin4:latest
-    # даем имя
-    container_name: pgadminka
-    ports: [5679:80]
+    ports:
+      - 5679:80
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
