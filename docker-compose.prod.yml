@@ -3,7 +3,7 @@ services:
     # Сервис фронтенда
   front:
     # берем не образ а готовый файл на пк
-    image: glimpl/chat-messenger-front:${TAG:-latest}
+    image: docker.io/glimpl/chat-messenger-front:${TAG:-latest}
     # пишем внутренние и внешние порты
     ports:
       - 7890:80
@@ -13,7 +13,7 @@ services:
     depends_on: [back]
   back:
     # берем не образ а готовый файл на пк
-    image: glimpl/chat-messenger-back:${TAG:-latest}
+    image: docker.io/glimpl/chat-messenger-back:${TAG:-latest}
     # пишем внутренние и внешние порты
     ports:
       - 4000:4000
