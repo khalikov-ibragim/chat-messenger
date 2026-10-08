@@ -79,8 +79,8 @@ jobs:
         run: |
           docker tag chat-messenger-front glimpl/chat-messenger-front:latest
           docker push glimpl/chat-messenger-front:latest
+          docker tag glimpl/chat-messenger-front:latest glimpl/chat-messenger-front:${GITHUB_SHA::7}      
           docker push glimpl/chat-messenger-back:${GITHUB_SHA::7}
-          docker tag glimpl/chat-messenger-front:latest glimpl/chat-messenger-front:${GITHUB_SHA::7}         
 
       #deploy
   deploy:
