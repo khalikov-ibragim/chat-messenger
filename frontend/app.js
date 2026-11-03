@@ -1,6 +1,6 @@
 // The backend URL is injected via window.CHAT_API_URL if you need to override it
 // (e.g. from an nginx-served config.js in your docker setup). Defaults to localhost:4000.
-const API_URL = window.CHAT_API_URL || 'http://localhost:4000';
+const API_URL = window.CHAT_API_URL || 'http://back:4000';
 const ROOM = 'general';
 
 const socket = io(API_URL, { transports: ['websocket', 'polling'] });
