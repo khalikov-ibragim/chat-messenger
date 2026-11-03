@@ -71,7 +71,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: resid-service
+  name: redis-service
   namespace: chat-messenger
   labels:
     app: redis
