@@ -1,0 +1,60 @@
+apiVersion: v1 # For PVC
+kind: PersistentVolumeClaim # Выделение хранилища
+metadata:
+  name: postgres-pvc
+  namespace: chat-messenger
+spec:
+  accessModes: #Режим доступа
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: chat-messenger
+  labels:
+    name: postgres
+    tier: database
+spec:
+  replicas: 1
+  revisionHistoryLimit: 4
+  selector:
+    matchLabels:
+      name: postgres
+  strategy:
+    type: Recreate #Удаление старого пода перед созданием нового
+  template:
+    metadata:
+      labels:
+        name: postgres
+        tier: database
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: database
+          image: docker.io/postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres
+              containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: db-secret
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc

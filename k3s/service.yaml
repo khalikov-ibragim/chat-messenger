@@ -1,0 +1,85 @@
+# Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+  namespace: chat-messenger
+  labels:
+    app: front
+spec:
+  type: NodePort
+  selector:
+    app: front
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30083
+---
+#for backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: back
+  namespace: chat-messenger
+  labels:
+    app: back
+spec:
+  type: ClusterIP
+  selector:
+    app: back
+  ports:
+    - name: http
+      port: 4000
+      targetPort: 4000
+---
+#for database
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: chat-messenger
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    name: postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+#for pgAdmin
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-service
+  namespace: chat-messenger
+  labels:
+    app: pgadmin
+spec:
+  type: NodePort
+  selector:
+    app: pgadmin
+  ports:
+    - name: http
+      port: 80
+      nodePort: 30084
+---
+#for redis
+apiVersion: v1
+kind: Service
+metadata:
+  name: resid-service
+  namespace: chat-messenger
+  labels:
+    app: redis
+spec:
+  type: NodePort
+  selector:
+    app: redis
+  ports:
+    - name: redis
+      port: 6379
+      nodePort: 30085

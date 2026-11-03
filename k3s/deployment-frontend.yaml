@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: chat-messenger
+  labels:
+    app: front
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 600
+  minReadySeconds: 0
+  selector:
+    matchLabels:
+      app: front
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: front
+          image: docker.io/glimpl/chat-messenger-front:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe: # Проверка готовности принятия трафика
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+          livenessProbe: #Проверка жив ли контейнер
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 30 #должно быть больше чем при проверке
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
