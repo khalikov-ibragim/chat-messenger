@@ -37,7 +37,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: database-service
+  name: bd
   namespace: chat-messenger
   labels:
     app: postgres
@@ -54,7 +54,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pg-service
+  name: pg
   namespace: chat-messenger
   labels:
     app: pgadmin
@@ -71,7 +71,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-service
+  name: redis
   namespace: chat-messenger
   labels:
     app: redis

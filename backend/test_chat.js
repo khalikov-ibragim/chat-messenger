@@ -3,7 +3,7 @@
 
 const { io} = require('socket.io-client');  //Подключаем клиент socket.io(Это мы поставили в npm) из этого пакета нужна функция io, она создает связь с сервером, const - переменная
 
-const URL = 'http://localhost:4000';
+const URL = process.env.API_URL || 'http://back:4000';
 const ROOM = 'general';
 // Уникальный ник на каждый прогон: сервер держит ник в Redis через SET NX,
 // и если процесс убит без graceful disconnect, ключ остаётся навсегда —

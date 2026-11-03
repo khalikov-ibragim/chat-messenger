@@ -16,7 +16,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 // --- Postgres ---
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'bd',
   port: Number(process.env.DB_PORT) || 5432,
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
@@ -41,7 +41,7 @@ let pubClient;
 let subClient;
 
 async function setupRedisAdapter() {
-  const url = `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`;
+  const url = `redis://${process.env.REDIS_HOST || 'redis'}:${process.env.REDIS_PORT || 6379}`;
   pubClient = createClient({ url });
   subClient = pubClient.duplicate();
   pubClient.on('error', (err) => console.error('[redis pub]', err));

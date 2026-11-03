@@ -42,7 +42,7 @@ spec:
               cpu: "500m"
           startupProbe:
             httpGet:
-              path: /
+              path: /misc/ping
               port: 80
             periodSeconds: 10
             failureThreshold: 30
