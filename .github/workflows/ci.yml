@@ -17,6 +17,14 @@ jobs:
           sudo mv /tmp/hadolint /usr/local/bin/hadolint
           sudo chmod +x /usr/local/bin/hadolint
 
+        #Установка проверки манифестов кубера
+      - name: Install kubeconform
+        run: |
+          wget -qO /tmp/kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/download/v0.6.4/kubeconform-linux-amd64.tar.gz
+          tar -xzf /tmp/kubeconform.tar.gz -C /tmp
+          sudo mv /tmp/kubeconform /usr/local/bin/kubeconform
+          sudo chmod +x /usr/local/bin/kubeconform
+
       - name: lint compose
         run: yamllint -d relaxed docker-compose*.y*ml
 
@@ -25,6 +33,9 @@ jobs:
 
       - name: lint shell scripts
         run: find . -name "*.sh" -print0 | xargs -0 -I{} shellcheck -P ../../ {}
+
+      - name: lint kubernetes manifests
+        run: kubeconform -strcit -summary k3s/
   onestage:
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +46,7 @@ jobs:
       #Build my containers
       - name: Build containers
         run: docker compose build
-       # Start containers
+      # Start containers
       - name: start containers
         run: docker compose up -d
       # check work containers
@@ -81,23 +92,25 @@ jobs:
           docker push glimpl/chat-messenger-front:latest
           docker tag glimpl/chat-messenger-front:latest glimpl/chat-messenger-front:${GITHUB_SHA::7}      
           docker push glimpl/chat-messenger-front:${GITHUB_SHA::7}
-
       #deploy
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest #Будем делать выполнение без self-hosted
     needs: [onestage]
     steps:
-      - name: Run my repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      #Login docker hub что бы забрать
-      - name: login to docker hub
-        uses: docker/login-action@v3
+      - name: Install kubectl #Устанвока kubectl
+        uses: azure/setup-kubectl@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{  secrets.DOCKER_PASSWORD }}
-      #pull
-      - name: pull images
-        run: docker compose pull
-      - name: start
-        run: docker compose up -d
+          version: 'v1.28.0'
+      - name: Deploy to k3s cluster
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |          
+        #Скачиваем недавно обновленный образ бэкэнда
+          kubectl set image deployment/back back=glimpl/chat-messenger-back:${GITHUB_SHA::7} -n chat-messenger 
+        #Скачиваем недавно обновленный образ фронтенда
+          kubectl set image deployment/front front=glimpl/chat-messenger-front:${GITHUB_SHA::7} -n chat-messenger
+
+          
