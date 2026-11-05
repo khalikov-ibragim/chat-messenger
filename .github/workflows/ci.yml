@@ -35,7 +35,7 @@ jobs:
         run: find . -name "*.sh" -print0 | xargs -0 -I{} shellcheck -P ../../ {}
 
       - name: lint kubernetes manifests
-        run: kubeconform -strcit -summary k3s/
+        run: kubeconform -strict -summary k3s/
   onestage:
     runs-on: ubuntu-latest
     steps:
@@ -106,8 +106,12 @@ jobs:
           version: 'v1.28.0'
       - name: Deploy to k3s cluster
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }} # 1. Кладем конфиг во временную переменную
         run: |
+          echo "$KUBE_CONFIG_DATA" > /tmp/kubeconfig.yaml # 2. Создаем РЕАЛЬНЫЙ файл и записываем туда текст
+          export KUBECONFIG=/tmp/kubeconfig.yaml          # 3. записываем правильный путь внутрь конфига
+          kubectl cluster-info                            # 4. Проверяем связь
+          
           # Скачиваем недавно обновленный образ бэкэнда
           kubectl set image deployment/back back=glimpl/chat-messenger-back:${GITHUB_SHA::7} -n chat-messenger 
           
