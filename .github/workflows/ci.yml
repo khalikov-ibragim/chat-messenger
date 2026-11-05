@@ -94,7 +94,7 @@ jobs:
           docker push glimpl/chat-messenger-front:${GITHUB_SHA::7}
       #deploy
   deploy:
-    runs-on: ubuntu-latest #Будем делать выполнение без self-hosted
+    runs-on: self-hosted
     needs: [onestage]
     steps:
       - name: Checkout repository
