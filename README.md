@@ -1,14 +1,17 @@
 # Chat Messenger
 
-Простой чат в реальном времени: пользователь вводит имя, попадает в общую комнату
-`#general`, видит историю и общается с другими подключёнными пользователями.
+Чат в реальном времени с поддержкой комнат, историей сообщений и авторизацией. 
+
+Проект разворачивается через **Docker/Podman Compose** и в **Kubernetes (k3s)** (манифесты в `k3s/`). Настроен полный **CI/CD** в GitHub Actions: линтинг, интеграционные WebSocket-тесты, сборка и пуш образов в Docker Hub, деплой в k3s-кластер с обновлением образов через `kubectl set image`.
 
 ## Стек
 
 - **Backend:** Node.js, Express (REST) + Socket.IO (WebSocket), PostgreSQL
-- **Redis:** адаптер Socket.IO (pub/sub) — нужен для масштабирования на несколько реплик
-- **Frontend:** чистые HTML/CSS/JS, раздаётся nginx
-- **Контейнеризация:** Podman / Docker Compose
+- **Redis:** адаптер Socket.IO (pub/sub) — для работы в режиме нескольких реплик бэкенда
+- **Frontend:** HTML/CSS/JS, Nginx
+- **БД/Кэш:** PostgreSQL, Redis
+- **CI/CD:** GitHub Actions, self-hosted runner
+- **Оркестрация:** Kubernetes (k3s), Docker Compose, Podman Compose
 
 ## Состав сервисов
 
