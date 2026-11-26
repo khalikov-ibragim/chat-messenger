@@ -25,7 +25,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: back
-          image: docker.io/glimpl/chat-messenger-back:latest
+          image: docker.io/glimpl/chat-messenger-back:a6b5f76
           imagePullPolicy: Always
           ports:
             - name: http

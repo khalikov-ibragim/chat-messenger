@@ -37,6 +37,7 @@ jobs:
       - name: lint kubernetes manifests
         run: kubeconform -strict -summary k3s/
   onestage:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - name: Copy my repository
@@ -109,7 +110,7 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }} # 1. Кладем конфиг во временную переменную
         run: |
           echo "$KUBE_CONFIG_DATA" > /tmp/kubeconfig.yaml # 2. Создаем РЕАЛЬНЫЙ файл и записываем туда текст
-          export KUBECONFIG=/tmp/kubeconfig.yaml          # 3. записываем правильный путь внутрь конфига
+          export KUBECONFIG=/tmp/kubeconfig.yaml          # 3. делаем переменную доступной
           kubectl cluster-info                            # 4. Проверяем связь
           
           # Скачиваем недавно обновленный образ бэкэнда
