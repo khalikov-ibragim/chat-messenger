@@ -11,6 +11,7 @@ RUN npm install
 
 #устанавливаем пользователя и переключаемся на него
 RUN useradd --create-home --uid 10001 appuser
+
 USER appuser
 
 #запуск зависимости
